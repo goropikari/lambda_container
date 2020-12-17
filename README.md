@@ -7,7 +7,7 @@
 - terraform-provider-aws 3.21.0
 
 
-Making resources except for lambda function. Because a lambda function needs an image which is maintained by ECR.
+Making resources except for lambda function. A lambda function needs an image which is maintained by ECR.
 
 ```
 $ cd terraform
