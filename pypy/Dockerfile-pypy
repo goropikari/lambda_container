@@ -1,0 +1,30 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y \
+        build-essential \
+        curl \
+        cmake \
+        autoconf \
+        libtool
+
+ENV FUNCTION_DIR=/var/task
+
+RUN cd /usr/local && \
+    curl -O https://downloads.python.org/pypy/pypy3.7-v7.3.3-linux64.tar.bz2 && \
+    tar jxf pypy3.7-v7.3.3-linux64.tar.bz2 && \
+    ln -s pypy3.7-v7.3.3-linux64 pypy3
+
+RUN /usr/local/pypy3/bin/pypy -m ensurepip && \
+    /usr/local/pypy3/bin/pypy -mpip install -U pip wheel && \
+    /usr/local/pypy3/bin/pypy -mpip install awslambdaric --target ${FUNCTION_DIR}
+
+ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /usr/bin/aws-lambda-rie
+RUN chmod 755 /usr/bin/aws-lambda-rie
+ENTRYPOINT ["/entrypoint.sh"]
+CMD [ "main.handler" ]
+
+COPY entrypoint.sh /entrypoint.sh
+COPY main.py $FUNCTION_DIR/main.py
+WORKDIR $FUNCTION_DIR
