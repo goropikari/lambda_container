@@ -18,13 +18,14 @@ $ terraform apply
 docker build & push
 
 ```bash
-$ cd python
-$ aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com
 $ IMAGE_NAME=lambda_container
 $ VERSION=v1
+$ AWS_REGION=ap-northeast-1
+$ cd python
+$ aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com
 $ docker build -t $IMAGE_NAME .
-$ docker tag $IMAGE_NAME:latest $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com/$IMAGE_NAME:$VERSION
-$ docker push $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com/$IMAGE_NAME:$VERSION
+$ docker tag $IMAGE_NAME:latest $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+$ docker push $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
 ```
 
 
@@ -46,9 +47,9 @@ Modifying the script `main.py` and updating lambda function.
 $ IMAGE_NAME=lambda_container
 $ VERSION v2
 $ docker build -t $IMAGE_NAME .
-$ docker tag $IMAGE_NAME:latest $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com/$IMAGE_NAME:$VERSION
-$ docker push $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com/$IMAGE_NAME:$VERSION
-$ aws lambda update-function-code --function-name $IMAGE_NAME --image-uri $AWS_ACCOUNTS.dkr.ecr.ap-northeast-1.amazonaws.com/$IMAGE_NAME:$VERSION
+$ docker tag $IMAGE_NAME:latest $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+$ docker push $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+$ aws lambda update-function-code --function-name $IMAGE_NAME --image-uri $AWS_ACCOUNTS.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
 ```
 
 Invoke lambda function
