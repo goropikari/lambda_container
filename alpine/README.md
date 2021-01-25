@@ -9,3 +9,5 @@ $ docker run --rm -p 9000:8080 \
 $ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
 HelloWorld
 ```
+
+https://docs.aws.amazon.com/lambda/latest/dg/runtimes-walkthrough.html

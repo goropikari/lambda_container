@@ -1,3 +1,4 @@
 #!/bin/sh
 
-echo "HelloWorld"
+EVENT=$1
+echo "HelloWorld:$EVENT"

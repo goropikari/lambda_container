@@ -4,17 +4,6 @@ _HANDLER=$1
 
 RUNTIME_URL="http://$AWS_LAMBDA_RUNTIME_API/2018-06-01"
 
-function get_request_id() {
-    curl -X GET $RUNTIME_URL/runtime/invocation/next \
-        --silent \
-        --show-error \
-        --location \
-        --include | \
-        grep Lambda-Runtime-Aws-Request-Id | \
-        cut -d" " -f2 | \
-        tr -d '\r\n'
-}
-
 function post() {
     request_id=$1
     response=$2
@@ -25,7 +14,9 @@ function post() {
 
 while true
 do
-    request_id=$(get_request_id)
-    response=$(sh ${LAMBDA_TASK_ROOT}/${_HANDLER})
-    post $request_id $response
+    HEADERS="$(mktemp)"
+    EVENT_DATA=$(curl -sS -LD "$HEADERS" -X GET "$RUNTIME_URL/runtime/invocation/next")
+    RESPONSE=$(sh ${LAMBDA_TASK_ROOT}/${_HANDLER} $EVENT_DATA)
+    REQUEST_ID=$(grep -Fi Lambda-Runtime-Aws-Request-Id "$HEADERS" | tr -d '[:space:]' | cut -d: -f2)
+    post $REQUEST_ID $RESPONSE
 done
