@@ -6,8 +6,8 @@ $ docker run --rm -p 9000:8080 \
     -v $(pwd)/aws-lambda-rie:/aws-lambda-rie \
     --entrypoint="/aws-lambda-rie" \
     lambda_alpine /var/runtime/bootstrap main.sh
-$ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
-HelloWorld
+$ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d 'John';
+HelloWorld:John
 ```
 
 https://docs.aws.amazon.com/lambda/latest/dg/runtimes-walkthrough.html
