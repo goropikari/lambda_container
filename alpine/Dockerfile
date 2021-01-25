@@ -10,5 +10,5 @@ COPY main.sh $LAMBDA_TASK_ROOT/
 
 WORKDIR $LAMBDA_TASK_ROOT
 
-ENTRYPOINT ["$LAMBDA_RUNTIME_DIR/bootstrap"]
+ENTRYPOINT ["/var/runtime/bootstrap"]
 CMD ["main.sh"]

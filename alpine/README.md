@@ -10,4 +10,12 @@ $ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" 
 HelloWorld:John
 ```
 
+```
+# Push image to ECR
+$ aws lambda update-function-code --function-name <function_name> --image-uri <image_uri>:latest
+$ aws lambda invoke --cli-binary-format raw-in-base64-out --function-name <function_name> --payload '"John"' /dev/stderr > /dev/null
+HelloWorld:John
+```
+
+
 https://docs.aws.amazon.com/lambda/latest/dg/runtimes-walkthrough.html
