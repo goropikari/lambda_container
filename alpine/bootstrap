@@ -1,0 +1,31 @@
+#!/bin/sh
+
+_HANDLER=$1
+
+RUNTIME_URL="http://$AWS_LAMBDA_RUNTIME_API/2018-06-01"
+
+function get_request_id() {
+    curl -X GET $RUNTIME_URL/runtime/invocation/next \
+        --silent \
+        --show-error \
+        --location \
+        --include | \
+        grep Lambda-Runtime-Aws-Request-Id | \
+        cut -d" " -f2 | \
+        tr -d '\r\n'
+}
+
+function post() {
+    request_id=$1
+    response=$2
+    url="$RUNTIME_URL/runtime/invocation/$request_id/response"
+    echo post url: $url
+    curl -X POST $url -d "$response"
+}
+
+while true
+do
+    request_id=$(get_request_id)
+    response=$(sh ${LAMBDA_TASK_ROOT}/${_HANDLER})
+    post $request_id $response
+done
